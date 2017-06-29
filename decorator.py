@@ -1,38 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from functools import wraps
-
-HOST_DOCKER = 0
-
-def docker_host_required(f):
-    """ 装饰器，必须要求 host 类型是 HOST——DOCKER """
-   
-    @wraps(f)
+def my_decorator(func):
     def wrapper(*args, **kwargs):
-        if args[0].type != HOST_DOCKER:
-            raise Exception("Not docker host")
-        else:
-            return f(*args, **kwargs)
+        print("Before call")
+        result = func(*args, **kwargs)
+        print("After call")
+        return result
     return wrapper
 
+@my_decorator
+def add(a, b):
+    return a+b
 
-class Host(object):
-    """ host 类 """
-    def __init__(self, type):
-        self.type = type
-
-    # 装饰这一个方法
-    @docker_host_required
-    def create_container(self):
-        print("creat container")
-
-
-if __name__ == '__main__':
-    # 初始化 Host
-    host = Host(HOST_DOCKER)
-    host.create_container()
-    print("")
-    # 再次初始化 Host
-    host = Host(1)
-    host.create_container()
+print(add(1,3))
